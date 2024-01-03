@@ -1,0 +1,140 @@
+{% extends "app/base.html" %} 
+{% load static %}
+
+{% block banner_slider %}
+<div id="carouselExampleDark" class="carousel carousel-dark slide">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active" data-bs-interval="10000">
+        <img src="{%static 'app/images/banner/b1.jpg' %}" class="d-block w-100" alt="banner" width='480' height='480'>
+        <div class="carousel-caption d-none d-md-block ">
+       
+          
+        </div>
+      </div>
+      <div class="carousel-item" data-bs-interval="2000">
+        <img src="{%static 'app/images/banner/b2.jpg' %}" class="d-block w-100" alt="..." width='480' height='480'>
+        <div class="carousel-caption d-none d-md-block">
+         
+         
+        </div>
+      </div>
+       {% comment %} <div class="carousel-item">
+       {% comment %} <img src="{%static 'app/images/banner/b3.jpg' %}" class="d-block w-100" alt="..." width='480' height='480'>
+        <div class="carousel-caption d-none d-md-block">
+         
+          
+        </div>  {% endcomment %}
+      {% comment %} </div> {% endcomment %}
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Trước</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Tiếp</span>
+    </button>
+  </div>
+{% endblock banner_slider %}
+{% block main_content %}
+<div class="container">
+  <h2>Sản phẩm giảm giá</h2>
+  <div class="row">
+    {% for product in discount_products %}
+    <div class="col-md-3">
+        <!-- Đoạn mã hiển thị sản phẩm giảm giá -->
+        <div class="card" style="width: 18rem; margin: 2rem">
+          <div class="label new" style="position: absolute; top: 10px; right: 10px; background-color: #e44d26; color: #fff; padding: 5px 10px; border-radius: 5px;">
+            <span class="discount-percent">{{ product.discount_percent }}%</span> SALE
+          </div>
+            <img src="{{ product.ImageURL }}" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <div class="price d-flex flex-row align-items-center">
+                    {% if product.discount_percent > 0 %}
+                        <span class="orig-price"><s>${{ product.price|floatformat:2 }}</s></span>
+                        {% comment %} <span class="discount-percent">-{{ product.discount_percent }}%</span> {% endcomment %}
+                        {% comment %} Tính giá giảm giá và định dạng nó với hai chữ số thập phân {% endcomment %}
+                        {% with discounted_price=product.get_discounted_price %}
+                            <span class="act-price"><strong>${{ discounted_price|floatformat:2 }}</strong></span>
+                        {% endwith %}
+                    {% else %}
+                        <span class="act-price">${{ product.price|floatformat:2 }}</span>
+                    {% endif %}
+                </div>
+                <button data-product="{{ product.id }}" data-action="add" class="btn btn-outline-secondary add-btn update-cart">Thêm</button>
+                <a class="btn btn-outline-success" href="{% url 'product_detail' product.id %}">Xem</a>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+  </div>
+
+  <div class="pagination mt-4">
+    <span class="step-links">
+      {% if discount_products.has_previous %}
+        <a href="?page_discount=1">&laquo; first</a>
+        <a href="?page_discount={{ discount_products.previous_page_number }}">previous</a>
+      {% endif %}
+
+      <span class="current">
+        Page {{ discount_products.number }} of {{ discount_products.paginator.num_pages }}.
+      </span>
+
+      {% if discount_products.has_next %}
+        <a href="?page_discount={{ discount_products.next_page_number }}">next</a>
+        <a href="?page_discount={{ discount_products.paginator.num_pages }}">last &raquo;</a>
+      {% endif %}
+    </span>
+  </div>
+</div>
+
+<div class="container">
+  <h2>Tất cả sản phẩm</h2>
+  <div class="row">
+    {% for product in all_products %}
+      <div class="col-md-3">
+        <!-- Đoạn mã hiển thị tất cả sản phẩm -->
+        <div class="card" style="width: 18rem; margin: 2rem">
+          <img src="{{ product.ImageURL }}" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <div class="price d-flex flex-row align-items-center">
+              <span class="act-price">${{ product.price }}</span>
+            </div>
+            <button data-product="{{ product.id }}" data-action="add" class="btn btn-outline-secondary add-btn update-cart">Thêm</button>
+            <a class="btn btn-outline-success" href="{% url 'product_detail' product_id=product.id %}">Xem</a>
+
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="pagination mt-4">
+    <span class="step-links">
+      {% if all_products.has_previous %}
+        <a href="?page_all=1">&laquo; first</a>
+        <a href="?page_all={{ all_products.previous_page_number }}">previous</a>
+      {% endif %}
+
+      <span class="current">
+        Page {{ all_products.number }} of {{ all_products.paginator.num_pages }}.
+      </span>
+
+      {% if all_products.has_next %}
+        <a href="?page_all={{ all_products.next_page_number }}">next</a>
+        <a href="?page_all={{ all_products.paginator.num_pages }}">last &raquo;</a>
+      {% endif %}
+    </span>
+  </div>
+</div>
+<br><br><br>
+
+{% endblock main_content %}

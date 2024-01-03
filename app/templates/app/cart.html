@@ -1,0 +1,73 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block cart_content %}
+<div class="row" style='width:100%'>
+    <div class="col-lg-12">
+		<div class="box-element">
+            <a class="btn btn-outline-dark" href="{% url 'home' %}">&#x2190; Tiếp tục mua sắm</a>
+            <br>
+            <br>
+            <form method="post" action="{% url 'checkout' %}">
+                {% csrf_token %}
+                <table class="table">
+                    <tr>
+                        <th><h5>Sản Phẩm: <strong>{{ order.get_cart_items }}</strong></h5></th>
+                        <th><h5>Tổng:<strong> {{ order.get_cart_total }}</strong></h5></th>
+                        <th>
+                            <button style="float:right; margin:5px;" class="btn btn-success">Thanh Toán</button>
+                        </th>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
+        <br>
+        <div class="box-element">
+            <div class="cart-row">
+                <div style="flex:2"></div>
+                <div style="flex:2"><strong>Sản Phẩm</strong></div>
+                <div style="flex:1"><strong>Giá</strong></div>
+                <div style="flex:1"><strong>Số lượng</strong></div>
+                <div style="flex:1"><strong>Tổng</strong></div>
+            </div>
+            {% for item in items %}
+            <div class="cart-row">
+                <div style="flex:2"><img class="row-image" src="{{ item.product.ImageURL }}"></div>
+                <div style="flex:2"><p>{{ item.product.name }}</p></div>
+                <div style="flex:1">
+                    <p>
+                        {% if item.product.is_discounted %}
+                            <span class="act-price">${{ item.discounted_price|floatformat:2 }}</span>
+                        {% else %}
+                            <span class="act-price">${{ item.product.price }}</span>
+                        {% endif %}
+                    </p>
+                </div>
+                <div style="flex:1">
+                    <p class="quantity">{{ item.quantity }}</p>
+                    <div class="quantity">
+                        <img data-product="{{ item.product.id }}" data-action='add' class="chg-quantity update-cart" src="{% static 'app/images/arrow-up.png' %}">
+                        <img data-product="{{ item.product.id }}" data-action='remove' class="chg-quantity update-cart" src="{% static 'app/images/arrow-down.png' %}">
+                    </div>
+                </div>
+                <div style="flex:1">
+					<p>
+						{% if item.product.is_discounted %}
+							${% with discounted_total=item.discounted_price|floatformat:2 %}{{ discounted_total }}{% endwith %}
+						{% else %}
+							${% with item_total=item.get_total|floatformat:2 %}{{ item_total }}{% endwith %}
+						{% endif %}
+					</p>
+				</div>
+			</div>
+		{% endfor %}
+            <div class="cart-row">
+                <div style="flex:5"></div>
+                <div style="flex:1"><strong>Tổng đơn hàng:</strong></div>
+                <div style="flex:1"><p>${{ order.get_cart_total }}</p></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock cart_content %}

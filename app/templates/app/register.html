@@ -1,0 +1,95 @@
+{% extends "app/base.html" %} 
+{% load static %}
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+         {% block register %}
+     <section class="vh-100" style="background-color: #eee;">
+            <div class="container h-100">
+              <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-lg-12 col-xl-11">
+                  <div class="card text-black" style="border-radius: 25px;">
+                    <div class="card-body p-md-5">
+                      <div class="row justify-content-center">
+                        <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+          
+                          <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
+          
+                          <form method='POST' action='' >
+                            {% csrf_token %}
+                            <div class="form-outline mb-4">
+                                 <label class="form-label" for="form3Example1cg">User Name</label>
+                                 <p class="justify-content-center align-items-center">{{form.username}}</p>
+                            </div>
+            
+                            <div class="form-outline mb-4">
+                                <label class="form-label" for="form3Example3cg">Your Email</label>
+                                <p class="justify-content-center align-items-center">{{form.email}}</p>
+                            </div>
+            
+                            <div class="form-outline mb-4">
+                                <label class="form-label" for="form3Example1cg">First Name</label>
+                                <p class="justify-content-center align-items-center">{{form.first_name}}</p>
+                           </div>
+            
+                           <div class="form-outline mb-4">
+                                <label class="form-label" for="form3Example1cg">Last Name</label>
+                                <p class="justify-content-center align-items-center">{{form.last_name}}</p>
+                            </div>
+                            <div class="form-outline mb-4">
+                              <label class="form-label" for="form3Example4cg">Password</label>
+                              <p class="justify-content-center align-items-center">{{form.password1}}</p>
+                            </div>
+            
+                            <div class="form-outline mb-4">
+                              <label class="form-label" for="form3Example4cdg">Repeat password</label>
+                              <p class="justify-content-center align-items-center">{{form.password2}}</p>
+                            </div>
+            
+          
+                            
+                            <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+
+
+                              <button type="submit" class="btn btn-primary btn-lg">Đăng Kí</button>
+                            </div>
+                            <p class="text-center h6 fw-bold mb-5 mx-1 mx-md-4 mt-4">Bạn đã có tài khoản?<a href={% url "login" %}>Đăng nhập</a></p>
+
+                          </form>
+          
+                        </div>
+                        <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+          
+                          <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
+                            class="img-fluid" alt="Sample image">
+          
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section> 
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+       {% comment %} <form method ="POST" action = ""> {% endcomment %}
+            {% comment %} {% csrf_token %} {% endcomment %}
+            {% comment %} {{form.as_p}} {% endcomment %}
+            {% comment %} {{form.username}} {% endcomment %}
+            {% comment %} <input type="submit" name = "Create user"/> {% endcomment %}
+        {% comment %} </form>  {% endcomment %}
+
+
+        <script src="" async defer></script>{% endblock register %}
+    </body>
+</html>

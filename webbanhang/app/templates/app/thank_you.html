@@ -1,0 +1,37 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h2>Thank You for Your Purchase!</h2>
+                <p>Your order has been placed successfully. We appreciate your business!</p>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% comment %} <!-- Thêm phần này để hiển thị đánh giá và mô tả từ người mua -->
+<div class="mt-5">
+    <h3>Đánh Giá của Khách Hàng</h3>
+    <ul>
+        {% for rating in ratings %}
+            <li>{{ rating.user.username }} - {{ rating.rating }} sao</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Mô Tả từ Người Mua</h3>
+    <p>{{ product.customer_description }}</p>
+
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ review_form.as_p }}
+        <button type="submit">Gửi Đánh Giá</button>
+    </form>
+
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ description_form.as_p }}
+        <button type="submit">Cập Nhật Mô Tả</button>
+    </form>
+</div> {% endcomment %}

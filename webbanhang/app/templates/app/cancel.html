@@ -1,0 +1,13 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h1>Payment Canceled</h1>
+                <p>Your payment has been canceled. If you have any questions, please contact our support team.</p>
+                <a href="{% url 'home' %}" class="btn btn-primary">Trở về Trang Chủ</a>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

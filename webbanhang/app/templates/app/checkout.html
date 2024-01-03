@@ -1,0 +1,127 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block content_checkout %}
+<div class="row" style='width:100%'>
+    <div class="col-lg-6">
+        <div class="box-element" id="form-wrapper">
+            <form method="post" action="{% url 'process_order' %}">
+                {% csrf_token %}
+                <div id="user-info">
+                    <div class="form-field">
+                        <input required class="form-control" type="text" name="name" placeholder="Name..">
+                    </div>
+                    <div class="form-field">
+                        <input required class="form-control" type="email" name="email" placeholder="Email..">
+                    </div>
+                </div>
+
+                <div id="shipping-info">
+                    <hr>
+                    <p>Địa Chỉ Giao Hàng:</p>
+                    <hr>
+                    <div class="form-field">
+                        <input class="form-control" type="text" name="address" placeholder="Address..">
+                    </div>
+                    <div class="form-field">
+                        <input class="form-control" type="text" name="city" placeholder="City..">
+                    </div>
+                    <div class="form-field">
+                        <input class="form-control" type="text" name="state" placeholder="State..">
+                    </div>
+                    <div class="form-field">
+                        <input class="form-control" type="text" name="mobile" placeholder="Mobile..">
+                    </div>
+                    <div class="form-field">
+                        <input class="form-control" type="text" name="country" placeholder="Country..">
+                    </div>
+                </div>
+
+                <hr>
+                <input id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">
+            </form>
+            
+            <!-- PayPal Smart Payment Button -->
+            <div id="paypal-button-container"></div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="box-element">
+            <a class="btn btn-outline-dark" href="{% url 'cart' %}">&#x2190; Trở Lại Giỏ Hàng</a>
+            <hr>
+            <h3>Đơn Hàng</h3>
+            <hr>
+            {% for item in items %}
+            <div class="cart-row">
+                <div style="flex:2"><img class="row-image" src="{{ item.product.ImageURL }}"></div>
+                <div style="flex:2"><p>{{ item.product.name }}</p></div>
+                <div style="flex:1">
+                    <p>
+                        {% if item.product.is_discounted %}
+                            <span class="act-price">${{ item.discounted_price|floatformat:2 }}</span>
+                        {% else %}
+                            <span class="act-price">${{ item.product.price }}</span>
+                        {% endif %}
+                    </p>
+                </div>
+                <div style="flex:1">
+                    <p class="quantity">{{ item.quantity }}</p>
+                    <div class="quantity">
+                        <img data-product="{{ item.product.id }}" data-action='add' class="chg-quantity update-cart" src="{% static 'app/images/arrow-up.png' %}">
+                        <img data-product="{{ item.product.id }}" data-action='remove' class="chg-quantity update-cart" src="{% static 'app/images/arrow-down.png' %}">
+                    </div>
+                </div>
+                <div style="flex:1">
+                    <p>
+                        {% if item.product.is_discounted %}
+                            $ {{ item.discounted_total|floatformat:2 }}
+                        {% else %}
+                            $ {{ item.get_total|floatformat:2 }}
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+            <h5>Sản Phẩm:{{ order.get_cart_items }}</h5>
+            <h5>Tổng:${{ order.get_cart_total|floatformat:2 }}</h5>
+        </div>
+    </div>
+    
+    
+
+<!-- Include the PayPal JavaScript SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=AU7f0bOaJ5WyOQZhkTVJV8EEuLLK_oPJmvy7lVUktOsj89lWaEiGcIxKN0w_FT4L1arb3CLecj-z_o3h"></script>
+
+<!-- Initialize the PayPal JavaScript SDK with your client ID -->
+<script>
+    paypal.Buttons({
+        createOrder: function(data, actions) {
+            // Set up the transaction
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: '{{ order.get_cart_total }}'
+                    }
+                }]
+            });
+        },
+        onApprove: function(data, actions) {
+            // Capture the funds from the transaction
+            return actions.order.capture().then(function(details) {
+                // Call your server to save the transaction
+                return fetch('/paypal_return/', {
+                    method: 'get',
+                }).then(function(response) {
+                    return response.json();
+                }).then(function(data) {
+                    if (data.success) {
+                        window.location.href = '/thank_you/';
+                    } else {
+                        console.error('Invalid server response');
+                    }
+                });
+            });
+        }
+    }).render('#paypal-button-container');
+</script>
+{% endblock content_checkout %}

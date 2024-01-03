@@ -1,0 +1,309 @@
+{% load static %}
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Web bán hàng</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}" type="text/css"/>
+    <link rel="stylesheet" href="{% static 'app/css/main.css' %}" type="text/css"/>
+    <link rel="stylesheet" href="{% static 'app/css/all.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'app/css/owl.carousel.min.css' %}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!-- jQuery, Popper.js, Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+    <!-- Additional scripts -->
+    <script src="{% static 'app/js/all.min.js' %}"></script>
+    <script src="{% static 'app/js/myscript.js' %}"></script>
+    <script src="{% static 'app/js/s3.js' %}"></script>
+
+    <!-- Bootstrap 5 CSS and JS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+    <!-- Your custom script with user data -->
+    <script type="text/javascript">
+        var user = '{{ request.user }}';
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+    </script>
+    <script>
+      $(document).ready(function () {
+          $(".owl-carousel").owlCarousel({
+              loop: true,
+              margin: 10,
+              nav: true,
+              responsive: {
+                  0: {
+                      items: 1
+                  },
+                  600: {
+                      items: 2
+                  },
+                  1000: {
+                      items: 4
+                  }
+              }
+          });
+      });
+  </script>
+  
+</head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        {% comment %} menu  {% endcomment %}
+        {% comment %} <nav class="navbar navbar-expand-lg bg-body-tertiary">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+              <img src="{%static './app/images/Neel.png' %}"  with ="50" height="70" />
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Trang Chủ</a>
+                </li>
+                
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Sản Phẩm
+                  </a>
+                  <ul class="dropdown-menu">
+                    {% for i in categories  %}
+                    <li><a class="dropdown-item" href="{% url "category" %}?category={{i.slug}}">{{i.name}}</a></li>
+                    {% endfor %}
+                  </ul>
+                </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url "gioithieu" %}.html">Giới Thiệu</a>
+                  </li>
+                
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Liên Hệ</a>
+                </li>
+              </ul>
+              <form class="d-flex" role="search" method= POST action="{% url  "search"%}">
+                {% csrf_token %}
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name ="searched">
+                <button class="btn btn-outline-success" type="submit">  Tìm Kiếm</button>
+              </form>
+            </div>
+  
+              <div class='form-inline my-2 my-lg-0' style ="visibility:{{user_login}}">
+                <span>Hello!  {{request.user}}</span>
+                <span><a href={% url 'logout' %}>Đăng Xuất</a></span>
+              </div>
+
+              <div class='form-inline my-2 my-lg-0' style ="visibility:{{user_not_login}}">
+              <a class="nav-link" href={% url 'login' %}>Đăng Nhập</a>
+      
+            
+              <a class="nav-link" href={% url 'register' %}>Đăng Ký</a>
+            </div>
+          
+          <div class='form-inline my-2 my-lg-0'>
+            <a href="{%url 'cart' %}"><img id="cart-icon" src="{%static 'images/cart.png'%}"></a>
+            <p id="cart-total">{{cartItems}}</p>
+          </div>
+          </div>
+        </nav> {% endcomment %}
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+              <img src="{%static './app/images/Neel.png' %}" width="50" height="70" />
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Trang Chủ</a>
+                </li>
+                
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Sản Phẩm
+                  </a>
+                  <ul class="dropdown-menu">
+                    {% for i in categories  %}
+                    <li><a class="dropdown-item" href="{% url "category" %}?category={{i.slug}}">{{i.name}}</a></li>
+                    {% endfor %}
+                  </ul>
+                </li>
+                
+               
+                
+                
+              </ul>
+              <form class="d-flex" role="search" method="POST" action="{% url  "search"%}">
+                {% csrf_token %}
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searched">
+                <button class="btn btn-outline-success" type="submit">Tìm Kiếm</button>
+              </form>
+            </div>
+        
+            <!-- Thêm khoảng cách giữa "Hello user" và ô tìm kiếm -->
+            <div class='form-inline my-2 my-lg-0 user-info' style="visibility:{{user_login}}">
+              <span>Hello!  {{request.user}}</span>
+              <span><a href={% url 'logout' %}>Đăng Xuất</a></span>
+            </div>
+        
+            <div class='form-inline my-2 my-lg-0' style="visibility:{{user_not_login}}">
+              <a class="nav-link" href={% url 'login' %}>Đăng Nhập</a>
+              <a class="nav-link" href={% url 'register' %}>Đăng Ký</a>
+            </div>
+        
+            <div class='form-inline my-2 my-lg-0'>
+              <a href="{%url 'cart' %}"><img id="cart-icon" src="{%static 'images/cart.png'%}"></a>
+              <p id="cart-total">{{cartItems}}</p>
+            </div>
+          </div>
+        </nav>
+        
+  {% comment %} main body {% endcomment %}
+  {% block banner_slider %}{% endblock banner_slider %}
+
+ {% block  main_content %} {% endblock main_content %}
+
+ {% block cart_content %}{% endblock cart_content %}
+
+ {% block content_checkout %}{% endblock content_checkout %}
+ {% block register %}{% endblock register %}
+ {% block login %}{% endblock login %}
+ {% block search %}{% endblock search %}
+ {% block category %}{% endblock category %}
+
+  {% comment %} footer {% endcomment %}
+  <footer class="text-center text-lg-start bg-white text-muted">
+    <!-- Section: Social media -->
+    <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+      <!-- Left -->
+      {% comment %} <div class="me-5 d-none d-lg-block">
+        <span>Get connected with us on social networks:</span>
+      </div> {% endcomment %}
+      <!-- Left -->
+  
+      <!-- Right -->
+      <div>
+        <a href="" class="me-4 link-secondary">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="" class="me-4 link-secondary">
+          <i class="fab fa-twitter"></i>
+        </a>
+        <a href="" class="me-4 link-secondary">
+          <i class="fab fa-google"></i>
+        </a>
+        <a href="" class="me-4 link-secondary">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a href="" class="me-4 link-secondary">
+          <i class="fab fa-linkedin"></i>
+        </a>
+        <a href="" class="me-4 link-secondary">
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+      <!-- Right -->
+    </section>
+    <!-- Section: Social media -->
+  
+    <!-- Section: Links  -->
+    <section class="">
+      <div class="container text-center text-md-start mt-5">
+        <!-- Grid row -->
+        <div class="row mt-3">
+          <!-- Grid column -->
+          <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+            <!-- Content -->
+            <h6 class="text-uppercase fw-bold mb-4">
+              <i class="fas fa-gem me-3 text-secondary"></i>Phụ Tùng LELE
+            </h6>
+            <p>
+              Here you can use rows and columns to organize your footer content. Lorem ipsum
+              dolor sit amet, consectetur adipisicing elit.
+            </p>
+          </div>
+          <!-- Grid column -->
+  
+          <!-- Grid column -->
+          <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+            <!-- Links -->
+            <h6 class="text-uppercase fw-bold mb-4">
+              Products
+            </h6>
+            <p>
+              <a href="#!" class="text-reset">LELE</a>
+            </p>
+          </div>
+          <!-- Grid column -->
+  
+          <!-- Grid column -->
+          <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+            <!-- Links -->
+            <h6 class="text-uppercase fw-bold mb-4">
+              Useful links
+            </h6>
+            <p>
+              <a href="#!" class="text-reset">Pricing</a>
+            </p>
+            <p>
+              <a href="#!" class="text-reset">Settings</a>
+            </p>
+            <p>
+              <a href="#!" class="text-reset">Orders</a>
+            </p>
+            <p>
+              <a href="#!" class="text-reset">Help</a>
+            </p>
+          </div>
+          <!-- Grid column -->
+  
+          <!-- Grid column -->
+          <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+            <!-- Links -->
+            <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+            <p><i class="fas fa-home me-3 text-secondary"></i> HaNoi, NY 10012, VN</p>
+            <p>
+              <i class="fas fa-envelope me-3 text-secondary"></i>
+              tungthang@example.com
+            <!-- Links -->
+  <script src="{%static 'app/js/cart.js' %}"></script>
+    </body>
+</html>
